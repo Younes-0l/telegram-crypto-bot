@@ -2,7 +2,10 @@ from telegram.ext import ApplicationBuilder, CommandHandler, filters, MessageHan
 from telegram import Update
 from handlers.settings import BOT_TOKEN
 from handlers import start
+from database.database import create_tables
 
+
+create_tables()
 
 def main():
     print("Starting Bot ...")

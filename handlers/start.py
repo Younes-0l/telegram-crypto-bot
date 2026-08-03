@@ -7,10 +7,12 @@ from repositories import user_reepository
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_repo = user_reepository.UserRepository()
+    tel_user = update.effective_user
     user_service = UserService(user_repo=user_repo)
     user, is_new = user_service.get_or_create_user(
-        telegram_id=update.effective_user.id,
-        username=update.effective_user.username,
+        telegram_id=tel_user.id,
+        full_name=tel_user.full_name,
+        username=tel_user.username,
     )
 
     text = (
