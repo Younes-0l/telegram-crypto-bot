@@ -2,7 +2,8 @@ from telegram import Update, CallbackQuery
 from telegram.ext import ContextTypes
 from services.price_service import PriceService
 from keyboards.coin_menu import get_coin_selection_menu
-from services.helpers import format_price
+from services.helpers import format_number
+from keyboards.common import get_back_button
 
 
 async def show_price_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -25,12 +26,12 @@ async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if price is None:
         await query.message.edit_text(
             "⚠️ الان نمی‌تونم قیمت رو دریافت کنم، چند لحظه دیگه امتحان کن.",
-            # get_back_button
+            reply_markup=get_back_button("price_menu")
         )
         return
 
     formatted_price = format_number(price)
     await query.message.edit_text(
         f"💰 قیمت {symbol.upper()}: {formatted_price} تومان",
-        # get_back_button
+        reply_markup=get_back_button("price_menu")
     )
