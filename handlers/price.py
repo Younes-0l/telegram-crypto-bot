@@ -1,6 +1,17 @@
 from telegram import Update, CallbackQuery
 from telegram.ext import ContextTypes
 from services.price_service import PriceService
+from keyboards.coin_menu import get_coin_selection_menu
+from services.helpers import format_price
+
+
+async def show_price_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.message.edit_text(
+        "ارز موردنظرت رو انتخاب کن:",
+        reply_markup=get_coin_selection_menu()
+    )
+    await query.answer()
 
 async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -8,8 +19,8 @@ async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     price_service = PriceService()
 
     await query.answer("در حال دریافت قیمت...")
-    context = await price_service.get_price(symbol=symbol)
-    price = context['price']
+    result = price_service.get_price(symbol=symbol)
+    price = result['price']
 
     if price is None:
         await query.message.edit_text(
@@ -18,7 +29,8 @@ async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
+    formatted_price = format_number(price)
     await query.message.edit_text(
-        f"💰 قیمت {symbol.upper()}: {price:,.2f} تومان",
+        f"💰 قیمت {symbol.upper()}: {formatted_price} تومان",
         # get_back_button
     )
