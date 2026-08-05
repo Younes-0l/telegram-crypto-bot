@@ -17,11 +17,13 @@ async def show_price_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     symbol = str(query.data.split(":")[1])
-    price_service = PriceService()
+
+    redis_client = context.bot_data["redis_client"]
+    price_service = PriceService(redis_client=redis_client)
 
     await query.answer("در حال دریافت قیمت...")
-    result = price_service.get_price(symbol=symbol)
-    price = result['price']
+    result = await price_service.get_price(symbol=symbol)
+    price = result['price'] if result else None
 
     if price is None:
         await query.message.edit_text(
