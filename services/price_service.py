@@ -30,16 +30,23 @@ class PriceService:
 
     async def _get_from_cache(self, key: str) -> dict | None:
         try:
-            cached_value = await self.redis.get(key)
+            cached_value = await asyncio.wait_for(self.redis.get(key), timeout=1.5)
             if cached_value:
                 return json.loads(cached_value)
+        except asyncio.TimeoutError:
+            print(f"Redis GET timed out (outer guard)")
         except Exception as e:
             print(f"Redis read error: {e}")
         return None
 
     async def _set_cache(self, key: str, value: dict):
         try:
-            await self.redis.set(key, json.dumps(value), ex=self.CACHE_TTL_SECONDS)
+            await asyncio.wait_for(
+                self.redis.set(key, json.dumps(value), ex=self.CACHE_TTL_SECONDS),
+                timeout=1.5
+            )
+        except asyncio.TimeoutError:
+            print(f"Redis SET timed out (outer guard)")
         except Exception as e:
             print(f"Redis write error: {e}")
 
