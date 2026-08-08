@@ -1,7 +1,7 @@
-from telegram.ext import ApplicationBuilder, CommandHandler, filters, MessageHandler, CallbackQueryHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler
 from telegram import Update
 from handlers.settings import BOT_TOKEN
-from handlers import start, price, navigation, watchlist, alert
+from handlers import start, price, navigation, watchlist, alert, portfolio
 from database.database import create_tables
 from database.redis_client import redis_client
 from services.price_service import PriceService
@@ -10,6 +10,10 @@ from repositories.alert_repository import AlertRepository
 from services.watchlist_service import WatchlistService
 from services.alert_checker import check_alerts
 from handlers.alert_conversation import alert_conversation_handler
+from handlers.holding_conversation import holding_conversation_handler
+from repositories.holding_repository import HoldingRepository
+from services.portfolio_service import PortfolioService
+
 
 async def alert_check_job(context):
     await check_alerts(context.application)
@@ -35,6 +39,10 @@ def main():
     app.bot_data["price_service"] = price_service
     app.bot_data["watchlist_service"] = watchlist_service
 
+    holding_repo = HoldingRepository()
+    portfolio_service = PortfolioService(holding_repo=holding_repo, price_service=price_service)
+    app.bot_data["portfolio_service"] = portfolio_service
+
     app.add_handler(CommandHandler("start", start.start))
 
     app.add_handler(CallbackQueryHandler(price.show_price_menu, pattern=r"^menu:price$"))
@@ -49,6 +57,10 @@ def main():
     app.add_handler(CallbackQueryHandler(alert.show_alerts, pattern=r"^menu:alerts$"))
     app.add_handler(CallbackQueryHandler(alert.remove_alert, pattern=r"^alert_remove:\d+$"))
     app.add_handler(alert_conversation_handler)
+
+    app.add_handler(CallbackQueryHandler(portfolio.show_portfolio, pattern=r"^menu:portfolio$"))
+    app.add_handler(CallbackQueryHandler(portfolio.remove_holding, pattern=r"^holding_remove:\w+$"))
+    app.add_handler(holding_conversation_handler)
 
     app.job_queue.run_repeating(alert_check_job, interval=60, first=10)
 
