@@ -3,8 +3,8 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 from keyboards.coin_menu import get_coin_selection_menu
 from keyboards.alert_menu import get_direction_menu
 
-SELECT_COIN, ENTER_PRICE, SELECT_DIRECTION = range(3)
 
+SELECT_COIN, ENTER_PRICE, SELECT_DIRECTION = range(3)
 
 async def start_alert_creation(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -74,9 +74,8 @@ async def cancel_alert_creation(update: Update, context: ContextTypes.DEFAULT_TY
     await update.message.reply_text("لغو شد.", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
-
 alert_conversation_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(start_alert_creation, pattern=r"^menu:alerts$")],
+    entry_points=[CallbackQueryHandler(start_alert_creation, pattern=r"^alert_add$")],
     states={
         SELECT_COIN: [CallbackQueryHandler(coin_selected, pattern=r"^alert_coin:\w+$")],
         ENTER_PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, price_entered)],

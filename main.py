@@ -1,7 +1,7 @@
 from telegram.ext import ApplicationBuilder, CommandHandler, filters, MessageHandler, CallbackQueryHandler
 from telegram import Update
 from handlers.settings import BOT_TOKEN
-from handlers import start, price, navigation, watchlist
+from handlers import start, price, navigation, watchlist, alert
 from database.database import create_tables
 from database.redis_client import redis_client
 from services.price_service import PriceService
@@ -10,7 +10,6 @@ from repositories.alert_repository import AlertRepository
 from services.watchlist_service import WatchlistService
 from services.alert_checker import check_alerts
 from handlers.alert_conversation import alert_conversation_handler
-
 
 async def alert_check_job(context):
     await check_alerts(context.application)
@@ -47,6 +46,8 @@ def main():
     app.add_handler(CallbackQueryHandler(watchlist.confirm_add_coin, pattern=r"^watchlist_add_coin:\w+$"))
     app.add_handler(CallbackQueryHandler(watchlist.remove_coin, pattern=r"^watchlist_remove:\w+$"))
 
+    app.add_handler(CallbackQueryHandler(alert.show_alerts, pattern=r"^menu:alerts$"))
+    app.add_handler(CallbackQueryHandler(alert.remove_alert, pattern=r"^alert_remove:\d+$"))
     app.add_handler(alert_conversation_handler)
 
     app.job_queue.run_repeating(alert_check_job, interval=60, first=10)
