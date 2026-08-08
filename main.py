@@ -36,8 +36,6 @@ def main():
     app.bot_data["price_service"] = price_service
     app.bot_data["watchlist_service"] = watchlist_service
 
-    app.bot_data["redis_client"] = redis_client
-
     app.add_handler(CommandHandler("start", start.start))
 
     app.add_handler(CallbackQueryHandler(price.show_price_menu, pattern=r"^menu:price$"))

@@ -6,6 +6,8 @@ import json
 
 class PriceService:
     CACHE_TTL_SECONDS = 20
+    MAX_RETRIES = 2
+    RETRY_DELAY = 1.5
 
     def __init__(self, redis_client):
         self.client = Spot(TABDEAL_API_KEY, TABDEAL_SECURITY_KEY)
@@ -52,15 +54,20 @@ class PriceService:
 
     async def _fetch_from_api(self, symbol: str, vs_currency: str) -> dict | None:
         tabdeal_symbol = f"{symbol.upper()}{vs_currency.upper()}"
-        try:
-            trades = await asyncio.to_thread(
-                self.client.trades, symbol=tabdeal_symbol, limit=1
-            )
-        except Exception as e:
-            print(f"Error fetching price for {tabdeal_symbol}: {e}")
-            return None
 
-        if not trades:
-            return None
+        def _make_request():
+            client = Spot(TABDEAL_API_KEY, TABDEAL_SECURITY_KEY)
+            return client.trades(symbol=tabdeal_symbol, limit=1)
 
-        return {"price": float(trades[0]["price"])}
+        for attempt in range(1, self.MAX_RETRIES + 1):
+            try:
+                trades = await asyncio.to_thread(_make_request)
+                if not trades:
+                    return None
+                return {"price": float(trades[0]["price"])}
+            except Exception as e:
+                print(f"Attempt {attempt}/{self.MAX_RETRIES} failed for {tabdeal_symbol}: {e}")
+                if attempt < self.MAX_RETRIES:
+                    await asyncio.sleep(self.RETRY_DELAY)
+                else:
+                    return None
