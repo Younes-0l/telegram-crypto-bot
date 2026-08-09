@@ -1,5 +1,9 @@
+from repositories.holding_repository import HoldingRepository
+from services.price_service import PriceService
+
+
 class PortfolioService:
-    def __init__(self, holding_repo, price_service):
+    def __init__(self, holding_repo: HoldingRepository, price_service: PriceService):
         self.holding_repo = holding_repo
         self.price_service = price_service
 

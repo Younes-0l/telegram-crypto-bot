@@ -8,7 +8,7 @@ async def show_portfolio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = query.from_user.id
     portfolio_service = context.bot_data["portfolio_service"]
 
-    await query.answer()
+    await query.answer("در حال محاسبه...")
     summary = await portfolio_service.get_portfolio_summary(user_id)
 
     if not summary:
