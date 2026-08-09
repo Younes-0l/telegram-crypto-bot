@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters, CallbackQueryHandler, CommandHandler
 from keyboards.coin_menu import get_coin_selection_menu
+from .start import start
+
 
 SELECT_COIN, ENTER_AMOUNT, ENTER_AVG_PRICE = range(3)
 
@@ -93,6 +95,10 @@ async def cancel_holding(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("لغو شد.")
     return ConversationHandler.END
 
+async def cancel_and_restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
+    await start(update, context)
+    return ConversationHandler.END
 
 holding_conversation_handler = ConversationHandler(
     entry_points=[
@@ -104,5 +110,8 @@ holding_conversation_handler = ConversationHandler(
         ENTER_AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, amount_entered)],
         ENTER_AVG_PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, avg_price_entered)],
     },
-    fallbacks=[CommandHandler("cancel", cancel_holding)],
+    fallbacks=[
+        CommandHandler("cancel", cancel_holding),
+        CommandHandler("start", cancel_and_restart),
+        ],
 )
