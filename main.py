@@ -13,12 +13,24 @@ from handlers.alert_conversation import alert_conversation_handler
 from handlers.holding_conversation import holding_conversation_handler
 from repositories.holding_repository import HoldingRepository
 from services.portfolio_service import PortfolioService
+from handlers.error_handler import global_error_handler
+import logging
 
+
+create_tables()
 
 async def alert_check_job(context):
     await check_alerts(context.application)
 
-create_tables()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("bot.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 
 def main():
     print("Starting Crypto Bot ...")
@@ -44,6 +56,8 @@ def main():
     app.bot_data["portfolio_service"] = portfolio_service
 
     app.add_handler(CommandHandler("start", start.start))
+
+    app.add_error_handler(global_error_handler)
 
     app.add_handler(CallbackQueryHandler(price.show_price_menu, pattern=r"^menu:price$"))
     app.add_handler(CallbackQueryHandler(price.show_coin_price, pattern=r"^coin:\w+$"))
