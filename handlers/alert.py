@@ -18,7 +18,7 @@ async def show_alerts(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    text = "🔔 هشدارهای فعال شما:\n\nبرای حذف یک هشدار، روی ❌ کنارش بزن."
+    text = "هشدارهای فعال شما:\n\nبرای حذف یک هشدار، روی ❌ کنارش بزن. 🔔"
     await query.message.edit_text(text, reply_markup=get_alerts_list_menu(alerts))
 
 

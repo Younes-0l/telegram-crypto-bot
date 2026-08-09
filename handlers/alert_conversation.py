@@ -36,7 +36,7 @@ async def price_entered(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if target_price <= 0:
             raise ValueError
     except ValueError:
-        await update.message.reply_text("⚠️ لطفاً فقط یک عدد معتبر و مثبت وارد کن:")
+        await update.message.reply_text("لطفاً فقط یک عدد معتبر و مثبت وارد کن: ⚠️")
         return ENTER_PRICE
 
     context.user_data["alert_price"] = target_price
@@ -62,7 +62,7 @@ async def direction_selected(update: Update, context: ContextTypes.DEFAULT_TYPE)
     direction_text = "بالاتر رفت" if direction == "above" else "پایین‌تر اومد"
     await query.answer()
     await query.message.edit_text(
-        f"✅ هشدار تنظیم شد!\nوقتی {symbol} از {target_price:,.0f} تومان {direction_text}، بهت خبر می‌دم."
+        f"هشدار تنظیم شد! ✅\nوقتی {symbol} از {target_price:,.0f} تومان {direction_text}، بهت خبر می‌دم."
     )
 
     context.user_data.clear()

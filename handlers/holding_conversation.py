@@ -49,7 +49,7 @@ async def amount_entered(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if amount <= 0:
             raise ValueError
     except ValueError:
-        await update.message.reply_text("⚠️ لطفاً یک عدد معتبر و مثبت وارد کن:")
+        await update.message.reply_text("لطفاً یک عدد معتبر و مثبت وارد کن: ⚠️")
         return ENTER_AMOUNT
 
     context.user_data["holding_amount"] = amount
@@ -72,7 +72,7 @@ async def avg_price_entered(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if avg_price <= 0:
             raise ValueError
     except ValueError:
-        await update.message.reply_text("⚠️ لطفاً یک عدد معتبر و مثبت وارد کن:")
+        await update.message.reply_text("لطفاً یک عدد معتبر و مثبت وارد کن: ⚠️")
         return ENTER_AVG_PRICE
 
     symbol = context.user_data["holding_symbol"]
@@ -84,7 +84,7 @@ async def avg_price_entered(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await portfolio_service.set_holding(user_id, symbol, amount, avg_price)
 
     action_text = "به‌روزرسانی شد" if is_editing else "ثبت شد"
-    await update.message.reply_text(f"✅ {action_text}: {amount:g} {symbol} با میانگین خرید {avg_price:,.0f} تومان")
+    await update.message.reply_text(f"{action_text}: {amount:g} {symbol} با میانگین خرید {avg_price:,.0f} تومان ✅")
 
     context.user_data.clear()
     return ConversationHandler.END

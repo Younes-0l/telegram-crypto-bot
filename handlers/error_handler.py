@@ -11,7 +11,7 @@ async def global_error_handler(update: object, context: ContextTypes.DEFAULT_TYP
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text(
-                "⚠️ یه مشکلی پیش اومد. لطفاً دوباره امتحان کن یا از /start شروع کن."
+                "یه مشکلی پیش اومد. لطفاً دوباره امتحان کن یا از /start شروع کن. ⚠️"
             )
         except Exception:
             pass

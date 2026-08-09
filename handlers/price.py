@@ -27,13 +27,13 @@ async def show_coin_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if price is None:
         await query.message.edit_text(
-            "⚠️ الان نمی‌تونم قیمت رو دریافت کنم، چند لحظه دیگه امتحان کن.",
+            "الان نمی‌تونم قیمت رو دریافت کنم، چند لحظه دیگه امتحان کن. ⚠️",
             reply_markup=get_back_button("price_menu")
         )
         return
 
     formatted_price = format_number(price)
     await query.message.edit_text(
-        f"💰 قیمت {symbol.upper()}: {formatted_price} تومان",
+        f"قیمت {symbol.upper()}: {formatted_price} تومان 💰",
         reply_markup=get_back_button("price_menu")
     )

@@ -31,9 +31,9 @@ async def show_portfolio(update: Update, context: ContextTypes.DEFAULT_TYPE):
             lines.append(f"   سود/زیان: {entry['profit']:,.0f} تومان ({entry['profit_percent']:+.1f}٪)\n")
             total_profit += entry["profit"]
         else:
-            lines.append("   ⚠️ قیمت لحظه‌ای در دسترس نیست\n")
+            lines.append("    قیمت لحظه‌ای در دسترس نیست ⚠️\n")
 
-    lines.append(f"💰 مجموع سود/زیان: {total_profit:,.0f} تومان")
+    lines.append(f"مجموع سود/زیان: {total_profit:,.0f} تومان 💰")
 
     await query.message.edit_text("\n".join(lines), reply_markup=get_portfolio_menu(summary))
 
@@ -45,6 +45,6 @@ async def remove_holding(update: Update, context: ContextTypes.DEFAULT_TYPE):
     portfolio_service = context.bot_data["portfolio_service"]
 
     await portfolio_service.remove_holding(user_id, symbol)
-    await query.answer(f"🗑 {symbol} حذف شد")
+    await query.answer(f"{symbol} حذف شد 🗑")
 
     await show_portfolio(update, context)

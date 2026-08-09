@@ -19,7 +19,7 @@ async def show_watchlist(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    text = "⭐ واچ‌لیست شما:\n\nبرای حذف یک ارز، روی ❌ کنارش بزن."
+    text = "واچ‌لیست شما: ⭐\n\nبرای حذف یک ارز، روی ❌ کنارش بزن."
     await query.message.edit_text(text, reply_markup=get_watchlist_menu(entries))
 
 
