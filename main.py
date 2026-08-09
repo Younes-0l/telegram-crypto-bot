@@ -20,8 +20,11 @@ import logging
 create_tables()
 
 async def alert_check_job(context):
-    await check_alerts(context.application)
-
+    try:
+        await check_alerts(context.application)
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Alert check job failed: {e}", exc_info=True)
 
 logging.basicConfig(
     level=logging.INFO,
