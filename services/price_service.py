@@ -2,8 +2,10 @@ from tabdeal.spot import Spot
 from handlers.settings import TABDEAL_API_KEY, TABDEAL_SECURITY_KEY
 import asyncio
 import json
+import logging
 
 
+logger = logging.getLogger(__name__)
 class PriceService:
     CACHE_TTL_SECONDS = 20
     MAX_RETRIES = 2
@@ -36,9 +38,9 @@ class PriceService:
             if cached_value:
                 return json.loads(cached_value)
         except asyncio.TimeoutError:
-            print(f"Redis GET timed out (outer guard)")
+            logger.error(f"Redis GET timed out (outer guard)")
         except Exception as e:
-            print(f"Redis read error: {e}")
+            logger.error(f"Redis read error: {e}")
         return None
 
     async def _set_cache(self, key: str, value: dict):
@@ -48,9 +50,9 @@ class PriceService:
                 timeout=1.5
             )
         except asyncio.TimeoutError:
-            print(f"Redis SET timed out (outer guard)")
+            logger.error(f"Redis SET timed out (outer guard)")
         except Exception as e:
-            print(f"Redis write error: {e}")
+            logger.error(f"Redis write error: {e}")
 
     async def _fetch_from_api(self, symbol: str, vs_currency: str) -> dict | None:
         tabdeal_symbol = f"{symbol.upper()}{vs_currency.upper()}"
@@ -66,7 +68,7 @@ class PriceService:
                     return None
                 return {"price": float(trades[0]["price"])}
             except Exception as e:
-                print(f"Attempt {attempt}/{self.MAX_RETRIES} failed for {tabdeal_symbol}: {e}")
+                logger.error(f"Attempt {attempt}/{self.MAX_RETRIES} failed for {tabdeal_symbol}: {e}")
                 if attempt < self.MAX_RETRIES:
                     await asyncio.sleep(self.RETRY_DELAY)
                 else:

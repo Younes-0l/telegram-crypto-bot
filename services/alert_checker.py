@@ -1,5 +1,6 @@
 from telegram.ext import Application
 from telegram.constants import ParseMode
+import logging
 
 
 async def check_alerts(app: Application):
@@ -33,4 +34,5 @@ async def check_alerts(app: Application):
                 )
                 await alert_repo.deactivate(alert.id)
             except Exception as e:
-                print(f"Error sending alert to {alert.user_id}: {e}")
+                logger = logging.getLogger(__name__)
+                logger.error(f"Alert Error: {e}")
