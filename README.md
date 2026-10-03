@@ -159,20 +159,25 @@ profit = (current_price - avg_buy_price) × amount
 <table>
   <tr>
     <td align="center">
-      <strong>Get Crypto Price</strong><br>
-      <img src="docs/media/crypto-get-price.gif" width="300" alt="Get Crypto Price Demo">
-    </td>
-    <td align="center">
-      <strong>Watchlist</strong><br>
-      <img src="docs/media/crypto-watchlist.gif" width="300" alt="Watchlist Demo">
-    </td>
-    <td align="center">
       <strong>Price Alert</strong><br>
       <img src="docs/media/crypto-bot-alert.png" width="200" alt="Price Alert">
     </td>
     <td align="center">
       <strong>Portfolio</strong><br>
       <img src="docs/media/crypto-portfolio.png" width="200" alt="Portfolio">
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Get Crypto Price</strong><br>
+      <img src="docs/media/crypto-get-price.gif" width="300" alt="Get Crypto Price Demo">
+    </td>
+    <td align="center">
+      <strong>Watchlist</strong><br>
+      <img src="docs/media/crypto-watchlist.gif" width="300" alt="Watchlist Demo">
     </td>
   </tr>
 </table>
