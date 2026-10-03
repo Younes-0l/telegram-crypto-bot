@@ -156,13 +156,12 @@ profit = (current_price - avg_buy_price) × amount
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots and GIFs
 
-<!-- Add screenshots here, e.g.: -->
-<!-- ![Main menu](screenshots/main_menu.png) -->
-<!-- ![Watchlist](screenshots/watchlist.png) -->
-<!-- ![Price alert](screenshots/alert.png) -->
-<!-- ![Portfolio](screenshots/portfolio.png) -->
+![Main menu](docs/media/crypto-get-price.mp4)
+![Watchlist](docs/media/crypto-watchlist.mp4)
+![Alerts](docs/media/crypto-bot-alert.png)
+![Portfolio](docs/media/crypto-portfolio.png)
 
 | Main Menu | Watchlist | Price Alert | Portfolio |
 |---|---|---|---|
